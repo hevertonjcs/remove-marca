@@ -16,6 +16,9 @@ def remover_marca():
     file.save(entrada)
 
     imagem = cv2.imread(entrada)
+    if imagem is None:
+        return {"erro": "imagem inválida"}, 400
+
     altura, largura = imagem.shape[:2]
     mascara = np.zeros(imagem.shape[:2], dtype=np.uint8)
     cv2.rectangle(mascara, (0, altura - 60), (200, altura), 255, -1)
@@ -23,3 +26,8 @@ def remover_marca():
     cv2.imwrite(saida, resultado)
 
     return send_file(saida, mimetype="image/jpeg")
+
+# === ESTA PARTE É ESSENCIAL PARA FUNCIONAR NO RENDER.COM ===
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
